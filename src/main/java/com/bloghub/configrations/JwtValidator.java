@@ -36,9 +36,12 @@ public class JwtValidator extends OncePerRequestFilter {
 				List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
 				Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, auths);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
-			}catch (Exception e){
-				throw new BadCredentialsException("Invalid token....");
-			}
+			} catch (Exception e) {
+	            // Clear authentication if token invalid hai
+	            SecurityContextHolder.clearContext();
+	            // **Do NOT throw exception here** → filter chain continue karega
+	            // CustomAuthenticationEntryPoint 401 handle karega automatically
+	        }
 		}
 		filterChain.doFilter(request, response);
 	}
