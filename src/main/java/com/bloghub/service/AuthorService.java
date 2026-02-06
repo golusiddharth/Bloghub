@@ -1,5 +1,9 @@
 package com.bloghub.service;
 
-public class AuthorService {
+import java.util.List;
 
+import com.bloghub.entity.User;
+
+public interface AuthorService {
+     List<User> getAllUsers();
 }
