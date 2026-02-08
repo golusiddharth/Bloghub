@@ -47,15 +47,11 @@ public class GlobalExceptionhandle {
 		return new ResponseEntity<Map<String,String>>(errorMap,HttpStatus.BAD_REQUEST);
 	}
 	
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ErrorResponse> handleException(Exception ex){
-	    // Agar tumhare paas message null ya empty ho to default message de do
-	    String message = ex.getMessage() != null ? ex.getMessage() : "Internal server error";
-
-	    ErrorResponse re = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), message);
-	    return new ResponseEntity<>(re, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
+	 @ExceptionHandler(Exception.class)
+	    public ResponseEntity<ErrorResponse> handleException(Exception ex){
+	        ErrorResponse re = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+	        return new ResponseEntity<>(re, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
