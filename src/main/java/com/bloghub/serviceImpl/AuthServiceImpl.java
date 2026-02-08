@@ -50,6 +50,7 @@ public AuthResponse register(UserRegisterRequestDTO request) throws NotAllowedha
 		        }
 				
 			    User user =UserMapper.toEntity(request);
+			    user.setRole(UserRole.AUTHOR);
 			    // Encode password
 			    user.setPassword(passwordEncoder.encode(user.getPassword()));
 			    
