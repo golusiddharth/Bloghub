@@ -36,7 +36,7 @@ public class AdminInitializer {
 
             userRepository.save(admin);
 
-            System.out.println("✅ ADMIN CREATED SUCCESSFULLY");
+            System.out.println("ADMIN CREATED SUCCESSFULLY");
         };
     }
 }
