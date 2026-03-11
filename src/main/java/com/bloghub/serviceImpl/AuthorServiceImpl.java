@@ -125,13 +125,17 @@ public class AuthorServiceImpl implements AuthorService {
 
         String loggedInEmail = getLoggedInEmail();
 
-        User user = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Author not found!")
-                );
+        User loggedInUser = userRepository.findByEmail(loggedInEmail);
 
-        // 🔒 Authorization
-        if (!user.getEmail().equals(loggedInEmail)) {
+        if (loggedInUser == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found!"));
+
+        // Authorization
+        if (!loggedInUser.getRole().equals(UserRole.ADMIN) &&
+            !user.getEmail().equals(loggedInEmail)) {
             throw new RuntimeException("You are not allowed to delete this account");
         }
 
