@@ -3,7 +3,7 @@ package com.bloghub.exception;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import javax.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,6 +17,18 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 @RestControllerAdvice
 public class GlobalExceptionhandle {
+	
+	@ExceptionHandler(MessagingException.class)
+	public ResponseEntity<ErrorResponse> handleMessagingException(MessagingException ex) {
+		ex.printStackTrace(); 
+	    ErrorResponse re = new ErrorResponse(
+	            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	            "OTP email send nahi ho paya. Please try again."
+	    );
+
+	    return new ResponseEntity<>(re, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 	
 	@ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> resourceNotFound(ResourceNotFoundException ex){

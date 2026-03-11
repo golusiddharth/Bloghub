@@ -19,7 +19,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint{
 	    response.setContentType("application/json");
 	    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-	    // Better JSON structure like ErrorResponse
+	    // JSON structure like ErrorResponse
 	    String json = String.format(
 	        "{\"timestamp\": \"%s\", \"status\": %d, \"error\": \"%s\", \"message\": \"%s\", \"path\": \"%s\"}",
 	        java.time.Instant.now(),

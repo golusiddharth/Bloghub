@@ -18,7 +18,7 @@ public class AdminInitializer {
             PasswordEncoder passwordEncoder
     ) {
         return args -> {
-
+               
             String adminEmail = "golusiddharth88@gmail.com";
 
             // already admin hai to kuch mat karo
@@ -33,7 +33,8 @@ public class AdminInitializer {
             admin.setEmail(adminEmail);
             admin.setPassword(passwordEncoder.encode("admin@123"));
             admin.setRole(UserRole.ADMIN);
-
+            admin.setVerified(true);
+            admin.setEmailVerified(true);
             userRepository.save(admin);
 
             System.out.println("ADMIN CREATED SUCCESSFULLY");

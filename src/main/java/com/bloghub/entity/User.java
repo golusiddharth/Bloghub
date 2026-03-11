@@ -27,6 +27,13 @@ public class User {
     private String fullName;
 
     private String password;
+    
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
+
+    @Column(name = "email_otp")
+    private String otp;
+
 
     @Column(nullable = false, unique = true)
     private String email;

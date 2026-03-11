@@ -97,7 +97,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
        
 
-        // ✅ YE CHECK ADD KARO
+        //  YE CHECK ADD KARO
         if (upd.getCatName() != null &&
             categoryRepository.existsByCatName(upd.getCatName()) &&
             !category.getCatName().equals(upd.getCatName())) {

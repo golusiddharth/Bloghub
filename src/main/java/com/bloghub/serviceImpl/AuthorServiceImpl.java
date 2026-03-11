@@ -24,7 +24,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final UserRepository userRepository;
 
-    //  Utility: get logged-in email from JWT
+    //  Utility get logged-in email from JWT
     private String getLoggedInEmail() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || auth.getPrincipal().equals("anonymousUser")) {
@@ -51,7 +51,10 @@ public class AuthorServiceImpl implements AuthorService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Author is not found!")
                 );
-
+         
+        if (user.getRole() == UserRole.ADMIN) {
+            throw new ResourceNotFoundException("Author not found!");
+        }
         return UserMapper.toDTO(user);
     }
 

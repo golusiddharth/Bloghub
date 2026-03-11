@@ -29,6 +29,12 @@ public class SecurityConfig {
 		
 		return http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(Authorize -> Authorize
+						 // ✅ OTP & REGISTER public
+					    .requestMatchers(
+					    		 "/api/auth/register",
+					    		    "/api/auth/login",
+					    		    "/api/auth/verify-otp"
+					    ).permitAll()
 						.requestMatchers("/api/**").authenticated()
 						.requestMatchers("/api/super-admin/**").hasRole("ADMIN")
 						.anyRequest().permitAll())
