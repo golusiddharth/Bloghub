@@ -35,7 +35,7 @@ public class GeminiService {
         return callGroqSingle(prompt);
     }
 
-    // ✅ NEW — Multi-turn chat with system prompt
+    // NEW — Multi-turn chat with system prompt
     public String chat(String systemPrompt, List<Map<String, String>> messages) {
         try {
             HttpHeaders headers = new HttpHeaders();

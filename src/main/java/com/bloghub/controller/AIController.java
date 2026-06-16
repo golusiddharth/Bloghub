@@ -44,7 +44,7 @@ public class AIController {
         return ResponseEntity.ok(Map.of("suggestion", suggestion));
     }
 
-    // ✅ NEW — POST /api/ai/chat
+    // NEW — POST /api/ai/chat
     // Body: { "systemPrompt": "...", "messages": [{"role":"user","content":"..."}] }
     @PostMapping("/chat")
     public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, Object> req) {
