@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,5 +55,14 @@ public class AuthorController {
     public ResponseEntity<String> deleteAuthor(@PathVariable Long id) {
         authorService.deleteAuthor(id);
         return new ResponseEntity<>("Author deleted successfully", HttpStatus.OK);
+    }
+    
+    // BLOCK / UNBLOCK
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<UserResponseDTO> blockUnblockAuthor(@PathVariable Long id) {
+
+        UserResponseDTO updated = authorService.blockUnblockAuthor(id); // ✅ call service
+
+        return ResponseEntity.ok(updated);
     }
 }

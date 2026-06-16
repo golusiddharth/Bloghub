@@ -15,7 +15,8 @@ public class PostResponseDTO {
 	   private String title;
 	   private String content;
 	   private LocalDateTime createdAt;
-	   
+	// ── NEW ──
+	   private String imageUrl;
 	   private Long authorID;
 	   private String authorName;
 	   

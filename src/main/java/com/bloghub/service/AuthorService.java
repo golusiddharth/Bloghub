@@ -9,5 +9,6 @@ public interface AuthorService {
      List<UserResponseDTO> getAllauthos();
      UserResponseDTO getAuthorById(Long id);
      UserResponseDTO updateAuthor(Long id,UserUpdateRequestDTO user);
-     void deleteAuthor(Long id);     
+     void deleteAuthor(Long id);
+     UserResponseDTO blockUnblockAuthor(Long id);  // ✅ ADD
 }

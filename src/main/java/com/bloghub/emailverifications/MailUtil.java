@@ -6,8 +6,8 @@ import javax.mail.internet.*;
 
 public class MailUtil {
 
-    private static final String USERNAME = "golusiddharthgs@gmail.com";
-    private static final String PASSWORD = "crqv kywp xwix rugx"; 
+    private static final String USERNAME = "golusiddharth88@gmail.com";
+    private static final String PASSWORD = "ywer aykn pppz tnxs"; 
 
     private static Session getSession() {
         Properties prop = new Properties();

@@ -36,7 +36,8 @@ public class PostMapper {
         // Author mapping
         dto.setAuthorID(post.getAuthor().getId());
         dto.setAuthorName(post.getAuthor().getFullName());
-
+        // ── NEW ──
+        dto.setImageUrl(post.getImageUrl());
         // Category mapping
         dto.setCategoryID(post.getCategory().getID());
         dto.setCategoryName(post.getCategory().getCatName());

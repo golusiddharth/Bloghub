@@ -33,8 +33,14 @@ public class SecurityConfig {
 					    .requestMatchers(
 					    		 "/api/auth/register",
 					    		    "/api/auth/login",
-					    		    "/api/auth/verify-otp"
-					    ).permitAll()
+					    		    "/api/auth/verify-otp",
+					    		    "/api/posts",
+					                "/api/posts/**",
+					                "/api/categories",
+					                "/api/categories/**",
+					                "/api/ai/**",
+					    		 "/uploads/**").permitAll()
+					    
 						.requestMatchers("/api/**").authenticated()
 						.requestMatchers("/api/super-admin/**").hasRole("ADMIN")
 						.anyRequest().permitAll())
@@ -58,7 +64,8 @@ public class SecurityConfig {
 			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 				CorsConfiguration cfg = new CorsConfiguration();
 				cfg.setAllowedOrigins(Arrays.asList(
-						"http://localhost:3000"
+						"https://bloghubcom.vercel.app",
+						"http://localhost:5173"
 				));
 				cfg.setAllowedMethods(Collections.singletonList("*"));
 				cfg.setAllowCredentials(true);

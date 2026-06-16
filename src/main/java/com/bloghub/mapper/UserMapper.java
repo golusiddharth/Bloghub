@@ -26,6 +26,7 @@ public class UserMapper {
 		  dto.setAbout(res.getAbout());
 		  dto.setCreatedAt(res.getCreatedAt());
 		  dto.setLastLogin(res.getLastLogin());
+		   dto.setVerified(res.getVerified());   // ✅ ADD
 		  return dto;
 	}
 	

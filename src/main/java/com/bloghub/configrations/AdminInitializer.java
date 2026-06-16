@@ -27,7 +27,7 @@ public class AdminInitializer {
             }
 
             User admin = new User();
-            admin.setFullName("Super Admin");
+            admin.setFullName("Golu Siddharth");
             admin.setPhone("7782949175");
             admin.setAbout("I am the super administrator of BlogHub application");
             admin.setEmail(adminEmail);

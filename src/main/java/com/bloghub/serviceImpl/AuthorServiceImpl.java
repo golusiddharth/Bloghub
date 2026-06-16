@@ -141,4 +141,34 @@ public class AuthorServiceImpl implements AuthorService {
 
         userRepository.delete(user);
     }
+    
+    // ✅ NEW — Block / Unblock toggle (ADMIN only)
+    @Override
+    public UserResponseDTO blockUnblockAuthor(Long id) {
+
+        String loggedInEmail = getLoggedInEmail();
+
+        User loggedInUser = userRepository.findByEmail(loggedInEmail);
+        if (loggedInUser == null) {
+            throw new ResourceNotFoundException("Logged-in user not found");
+        }
+
+        // Only ADMIN can block/unblock
+        if (!loggedInUser.getRole().equals(UserRole.ADMIN)) {
+            throw new RuntimeException("Only admin can block or unblock users");
+        }
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found!"));
+
+        // Cannot block another ADMIN
+        if (user.getRole().equals(UserRole.ADMIN)) {
+            throw new RuntimeException("Cannot block an admin account");
+        }
+
+        // Toggle verified status
+        user.setVerified(!Boolean.TRUE.equals(user.getVerified()));
+
+        return UserMapper.toDTO(userRepository.save(user));
+    }
 }

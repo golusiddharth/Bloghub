@@ -22,4 +22,5 @@ public class UserResponseDTO {
         private String about;
 	    private LocalDateTime createdAt;
 	    private LocalDateTime lastLogin;
+	    private Boolean verified;   // ✅ ADD — block/active status
 }

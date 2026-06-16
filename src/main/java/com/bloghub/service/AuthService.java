@@ -11,4 +11,5 @@ public interface AuthService {
 	 AuthResponse register(UserRegisterRequestDTO request)throws NotAllowedhandleException,MessagingException;	
 	 AuthResponse login(UserLoginRequestDTO req)throws NotAllowedhandleException;
 	 AuthResponse verifyOtp(String email, String otp);
+	 
 }
