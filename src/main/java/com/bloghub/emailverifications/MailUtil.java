@@ -24,25 +24,24 @@ public class MailUtil {
         });
     }
 
-  public static void sendOTP(String toEmail, String otp)
+public static void sendOTP(String toEmail, String otp)
         throws MessagingException {
 
     System.out.println("MAIL USERNAME = " + USERNAME);
     System.out.println("PASSWORD NULL = " + (PASSWORD == null));
-    System.out.println("Sending OTP to = " + toEmail);
+    System.out.println("TO EMAIL = " + toEmail);
 
     Message message = new MimeMessage(getSession());
 
     message.setRecipients(
-        Message.RecipientType.TO,
-        InternetAddress.parse(toEmail)
-    );
+            Message.RecipientType.TO,
+            InternetAddress.parse(toEmail));
 
     message.setSubject("Email Verification OTP");
-    message.setText("Your OTP is: " + otp + "\nValid for 5 minutes.");
+    message.setText("Your OTP is: " + otp);
 
     Transport.send(message);
 
-    System.out.println("OTP SENT SUCCESSFULLY");
+    System.out.println("MAIL SENT SUCCESSFULLY");
 }
 }

@@ -67,10 +67,14 @@ public class AuthServiceImpl implements AuthService {
         // 4️ TEMP store (DB me save nahi)
         PendingUser pendingUser = new PendingUser(user, otp);
         PendingUserStore.save(request.getEmail(), pendingUser);
+System.out.println("OTP GENERATED = " + otp);
+System.out.println("BEFORE MAIL SEND");
 
         // 5️ send OTP mail
         MailUtil.sendOTP(request.getEmail(), otp);
 
+
+System.out.println("AFTER MAIL SEND");
         return AuthResponse.builder()
                 .message("OTP sent to email. Please verify")
                 .build();
