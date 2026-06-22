@@ -17,6 +17,7 @@ public class MailUtil {
         prop.put("mail.smtp.starttls.enable", "true");
         prop.put("mail.smtp.starttls.required", "true");
         prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        prop.put("mail.debug", "true");
 
         return Session.getInstance(prop, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -26,27 +27,35 @@ public class MailUtil {
     }
 
     public static void sendOTP(String toEmail, String otp) {
+        System.out.println("=== MAIL DEBUG START ===");
         System.out.println("MAIL USERNAME = " + USERNAME);
         System.out.println("PASSWORD NULL = " + (PASSWORD == null));
         System.out.println("TO EMAIL = " + toEmail);
+        System.out.println("OTP = " + otp);
 
         try {
             Message message = new MimeMessage(getSession());
+
+            // setFrom is required by Gmail
             message.setFrom(new InternetAddress(USERNAME));
+
             message.setRecipients(
                 Message.RecipientType.TO,
                 InternetAddress.parse(toEmail)
             );
-            message.setSubject("BlogHub - Email Verification OTP");
+            message.setSubject("BlogHub - Your OTP Verification Code");
 
-            // HTML email
             String htmlContent =
-                "<div style='font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:32px;background:#f9f9f9;border-radius:12px;'>" +
-                "<h2 style='color:#6d28d9;margin-bottom:8px;'>BlogHub</h2>" +
-                "<p style='color:#333;font-size:15px;'>Your OTP for email verification:</p>" +
-                "<div style='font-size:36px;font-weight:bold;letter-spacing:8px;color:#6d28d9;background:#ede9fe;padding:16px 24px;border-radius:8px;display:inline-block;margin:16px 0;'>" + otp + "</div>" +
-                "<p style='color:#666;font-size:13px;'>This OTP is valid for <b>10 minutes</b>. Do not share it with anyone.</p>" +
-                "<p style='color:#999;font-size:12px;margin-top:24px;'>If you did not request this, please ignore this email.</p>" +
+                "<div style='font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:32px;" +
+                "background:#f9f9f9;border-radius:12px;border:1px solid #e5e7eb;'>" +
+                "<h2 style='color:#6d28d9;margin-bottom:4px;'>BlogHub</h2>" +
+                "<p style='color:#374151;font-size:15px;'>Your OTP for email verification:</p>" +
+                "<div style='font-size:40px;font-weight:bold;letter-spacing:10px;color:#6d28d9;" +
+                "background:#ede9fe;padding:20px 28px;border-radius:10px;" +
+                "display:inline-block;margin:16px 0;'>" + otp + "</div>" +
+                "<p style='color:#6b7280;font-size:13px;'>Valid for <b>10 minutes</b>. Do not share with anyone.</p>" +
+                "<hr style='border:none;border-top:1px solid #e5e7eb;margin:20px 0;'/>" +
+                "<p style='color:#9ca3af;font-size:12px;'>If you did not create a BlogHub account, ignore this email.</p>" +
                 "</div>";
 
             MimeBodyPart htmlPart = new MimeBodyPart();
@@ -57,10 +66,11 @@ public class MailUtil {
             message.setContent(multipart);
 
             Transport.send(message);
-            System.out.println("OTP MAIL SENT SUCCESSFULLY to " + toEmail);
+            System.out.println("=== OTP MAIL SENT SUCCESSFULLY to " + toEmail + " ===");
 
         } catch (Exception e) {
-            System.out.println("MAIL SEND ERROR:");
+            System.out.println("=== MAIL SEND FAILED ===");
+            System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
