@@ -3,7 +3,6 @@ package com.bloghub.emailverifications;
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
-
 public class MailUtil {
 
     private static final String USERNAME = System.getenv("MAIL_USERNAME");
@@ -35,6 +34,7 @@ public class MailUtil {
     prop.put("mail.smtp.connectiontimeout", "10000");
     prop.put("mail.smtp.timeout", "10000");
     prop.put("mail.smtp.writetimeout", "10000");
+    prop.put("mail.debug", "true");
 
     return Session.getInstance(prop,
             new Authenticator() {
@@ -55,7 +55,10 @@ public static void sendOTP(String toEmail, String otp)
     System.out.println("PASSWORD NULL = " + (PASSWORD == null));
     System.out.println("TO EMAIL = " + toEmail);
 
-    Message message = new MimeMessage(getSession());
+   Session session = getSession();
+    session.setDebug(true);
+
+    Message message = new MimeMessage(session);
 
     message.setRecipients(
             Message.RecipientType.TO,
@@ -64,15 +67,22 @@ public static void sendOTP(String toEmail, String otp)
     message.setSubject("Email Verification OTP");
     message.setText("Your OTP is: " + otp);
 
-     try {
-    Transport.send(message);
-        System.out.println("MAIL SENT SUCCESSFULLY");
-    } catch (Exception e) {
-        System.out.println("MAIL ERROR = " + e.getMessage());
-        e.printStackTrace();
-        throw new MessagingException(e.getMessage());
-    }
+        try {
 
-    System.out.println("MAIL SENT SUCCESSFULLY");
+            System.out.println("TRYING SMTP CONNECTION...");
+
+            Transport.send(message);
+
+            System.out.println("MAIL SENT SUCCESSFULLY");
+
+        } catch (Exception e) {
+
+            System.out.println("MAIL ERROR = " + e.getMessage());
+
+            e.printStackTrace();
+
+            throw new MessagingException(e.getMessage());
+        }
 }
+
 }
