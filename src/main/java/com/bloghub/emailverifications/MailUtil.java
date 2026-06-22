@@ -40,7 +40,13 @@ public static void sendOTP(String toEmail, String otp)
     message.setSubject("Email Verification OTP");
     message.setText("Your OTP is: " + otp);
 
-    Transport.send(message);
+        try {
+        Transport.send(message);
+        System.out.println("MAIL SENT SUCCESSFULLY");
+    } catch (Exception e) {
+        System.out.println("MAIL ERROR:");
+        e.printStackTrace();
+    }
 
     System.out.println("MAIL SENT SUCCESSFULLY");
 }
