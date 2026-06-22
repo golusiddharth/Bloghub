@@ -1,4 +1,4 @@
-﻿package com.bloghub.emailverifications;
+package com.bloghub.emailverifications;
 
 import java.util.Properties;
 import javax.mail.*;
