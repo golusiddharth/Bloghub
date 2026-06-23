@@ -1,18 +1,16 @@
 package com.bloghub.serviceImpl;
 
-import java.io.IOException;
-import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bloghub.configrations.CloudinaryService;
 import com.bloghub.domain.UserRole;
 import com.bloghub.entity.*;
 import com.bloghub.exception.ResourceNotFoundException;
@@ -31,10 +29,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository     postRepository;
     private final UserRepository     userRepository;
     private final CategoryRepository categoryRepository;
-
-    // application.properties se upload directory path lega
-    @Value("${app.upload.dir:${user.home}/bloghub-uploads}")
-    private String uploadDir;
+    private final CloudinaryService  cloudinaryService;
 
     // ── Get JWT logged-in user ──
     private User getLoggedInUser() {
@@ -44,48 +39,6 @@ public class PostServiceImpl implements PostService {
         String email = auth.getName();
         return Optional.ofNullable(userRepository.findByEmail(email))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-    }
-
-    // ── Save image ──
-    private String saveImage(MultipartFile file) {
-        try {
-            // Validate type
-            String contentType = file.getContentType();
-            if (contentType == null ||
-               (!contentType.equals("image/jpeg") &&
-                !contentType.equals("image/png")  &&
-                !contentType.equals("image/webp") &&
-                !contentType.equals("image/gif"))) {
-                throw new RuntimeException("Only JPG, PNG, WEBP, GIF images are allowed.");
-            }
-
-            // Max 5 MB
-            if (file.getSize() > 5 * 1024 * 1024)
-                throw new RuntimeException("Image size must be under 5 MB.");
-
-            // Upload folder: {uploadDir}/images/
-            Path uploadPath = Paths.get(uploadDir, "images");
-            if (!Files.exists(uploadPath))
-                Files.createDirectories(uploadPath);
-
-            // Unique filename
-            String originalName = file.getOriginalFilename();
-            String extension    = (originalName != null && originalName.contains("."))
-                                  ? originalName.substring(originalName.lastIndexOf("."))
-                                  : ".jpg";
-            String fileName = System.currentTimeMillis() + "_"
-                            + UUID.randomUUID().toString().substring(0, 8)
-                            + extension;
-
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-            // URL path jo frontend use karega: /uploads/images/filename.jpg
-            return "/uploads/images/" + fileName;
-
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save image: " + e.getMessage());
-        }
     }
 
     @Override
@@ -109,10 +62,14 @@ public class PostServiceImpl implements PostService {
         post.setAuthor(loggedInUser);
         post.setCategory(category);
 
-        // Image save karo agar diya hai
+        // Upload image to Cloudinary
         if (image != null && !image.isEmpty()) {
-            String imageUrl = saveImage(image);
-            post.setImageUrl(imageUrl);
+            try {
+                String imageUrl = cloudinaryService.uploadImage(image);
+                post.setImageUrl(imageUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Image upload failed: " + e.getMessage());
+            }
         }
 
         return PostMapper.toDto(postRepository.save(post));
@@ -188,6 +145,12 @@ public class PostServiceImpl implements PostService {
         User loggedInUser = getLoggedInUser();
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+
+        // Delete image from Cloudinary
+        if (post.getImageUrl() != null) {
+            cloudinaryService.deleteImage(post.getImageUrl());
+        }
+
         if (loggedInUser.getRole() == UserRole.ADMIN) {
             postRepository.delete(post); return;
         }
